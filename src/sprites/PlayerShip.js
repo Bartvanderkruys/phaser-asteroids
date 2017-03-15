@@ -7,9 +7,10 @@ export default class extends Phaser.Sprite {
 
         // draw to the canvas context like normal
         bmd.ctx.beginPath();
-        bmd.ctx.lineTo(0, 64);
+        bmd.ctx.lineTo(16, 32);
+        bmd.ctx.lineTo(0, 56);
         bmd.ctx.lineTo(64, 32);
-        bmd.ctx.lineTo(0, 0);
+        bmd.ctx.lineTo(0, 8);
         bmd.ctx.closePath();
         bmd.ctx.fillStyle = '#d74dff';
         bmd.ctx.fill();
@@ -25,15 +26,15 @@ export default class extends Phaser.Sprite {
         //  and its physics settings
         this.game.physics.enable(this, Phaser.Physics.ARCADE);
 
-        this.body.drag.set(50);
-        this.body.maxVelocity.set(300);
+        this.body.drag.set(150);
+        this.body.maxVelocity.set(800);
     }
 
     update() {
         if (this.cursors.up.isDown) {
             this.game.physics.arcade.accelerationFromRotation(
                 this.rotation,
-                200,
+                500,
                 this.body.acceleration
             );
         } else {

@@ -1,14 +1,12 @@
 import Phaser from 'phaser'
 import PlayerShip from '../sprites/PlayerShip';
 
+import { screenWrap } from '../utils';
+
 export default class extends Phaser.State {
-    init() {
-    }
-
-    preload() {
-    }
-
     create() {
+        this.stage.backgroundColor = '#343650';
+
         this.game.renderer.clearBeforeRender = false;
         this.game.renderer.roundPixels = true;
         this.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
@@ -22,25 +20,6 @@ export default class extends Phaser.State {
     }
 
     update() {
-        this.screenWrap(this.playerShip);
-    }
-
-    screenWrap(sprite) {
-        if (sprite.x < 0) {
-            sprite.x = this.game.width;
-        }
-        else if (sprite.x > this.game.width) {
-            sprite.x = 0;
-        }
-
-        if (sprite.y < 0) {
-            sprite.y = this.game.height;
-        }
-        else if (sprite.y > this.game.height) {
-            sprite.y = 0;
-        }
-    }
-
-    render() {
+        screenWrap(this.playerShip, this.game);
     }
 }
