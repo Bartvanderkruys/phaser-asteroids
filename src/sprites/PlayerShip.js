@@ -1,36 +1,39 @@
 import Phaser from 'phaser'
 
+import { playerShipBMD } from '../bitmapdata/PlayerShipBMD';
+import { bulletBMD } from '../bitmapdata/BulletBMD';
+import { screenWrap } from '../utils';
+
 export default class extends Phaser.Sprite {
+
     constructor (game, x, y) {
-        // create a new bitmap data object
-        let bmd = game.add.bitmapData(64,64);
+        super(game, x, y, playerShipBMD(game));
 
-        // draw to the canvas context like normal
-        bmd.ctx.beginPath();
-        bmd.ctx.lineTo(16, 32);
-        bmd.ctx.lineTo(0, 56);
-        bmd.ctx.lineTo(64, 32);
-        bmd.ctx.lineTo(0, 8);
-        bmd.ctx.closePath();
-        bmd.ctx.fillStyle = '#d74dff';
-        bmd.ctx.fill();
-
-        super(game, x, y, bmd);
-
-        //  Game input
-        this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
+        this.bulletTime = 0;
 
         this.anchor.set(0.5);
 
-        //  and its physics settings
-        this.game.physics.enable(this, Phaser.Physics.ARCADE);
+        this.cursors = this.game.input.keyboard.createCursorKeys();
+        this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
 
+        this.game.physics.enable(this, Phaser.Physics.ARCADE);
         this.body.drag.set(150);
         this.body.maxVelocity.set(800);
+
+        this.bullets = game.add.group();
+        this.bullets.enableBody = true;
+        this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        this.bullets.createMultiple(80, bulletBMD(game));
+        this.bullets.setAll('anchor.x', 0.5);
+        this.bullets.setAll('anchor.y', 0.5);
     }
 
     update() {
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR))
+        {
+            this.fireBullet();
+        }
+
         if (this.cursors.up.isDown) {
             this.game.physics.arcade.accelerationFromRotation(
                 this.rotation,
@@ -50,5 +53,24 @@ export default class extends Phaser.Sprite {
         else {
             this.body.angularVelocity = 0;
         }
+
+        this.bullets.forEachExists(screenWrap, this, this.game);
+    }
+
+    fireBullet() {
+        if (this.game.time.now > this.bulletTime)
+        {
+            this.bullet = this.bullets.getFirstExists(false);
+
+            if (this.bullet)
+            {
+                this.bullet.reset(this.body.x + 32, this.body.y + 32);
+                this.bullet.lifespan = 800;
+                this.bullet.rotation = this.rotation;
+                this.game.physics.arcade.velocityFromRotation(this.rotation, 800, this.bullet.body.velocity);
+                this.bulletTime = this.game.time.now + 15;
+            }
+        }
+
     }
 }
