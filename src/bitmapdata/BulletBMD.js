@@ -6,7 +6,7 @@ export const bulletBMD = (game) => {
     bmd.ctx.lineTo(0, 6);
     bmd.ctx.lineTo(0, 0);
     bmd.ctx.closePath();
-    bmd.ctx.fillStyle = '#ffffff';
+    bmd.ctx.fillStyle = "#fcfff5";
     bmd.ctx.fill();
 
     return bmd;

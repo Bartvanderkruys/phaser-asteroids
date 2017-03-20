@@ -7,7 +7,7 @@ export const playerShipBMD = (game) => {
     bmd.ctx.lineTo(64, 32);
     bmd.ctx.lineTo(0, 8);
     bmd.ctx.closePath();
-    bmd.ctx.fillStyle = '#d74dff';
+    bmd.ctx.fillStyle = '#fcfff5';
     bmd.ctx.fill();
 
     return bmd;

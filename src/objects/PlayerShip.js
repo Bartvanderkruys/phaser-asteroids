@@ -8,9 +8,7 @@ export default class extends Phaser.Sprite {
 
     constructor (game, x, y) {
         super(game, x, y, playerShipBMD(game));
-
         this.bulletTime = 0;
-
         this.anchor.set(0.5);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -64,10 +62,14 @@ export default class extends Phaser.Sprite {
 
             if (this.bullet)
             {
-                this.bullet.reset(this.body.x + 32, this.body.y + 32);
-                this.bullet.lifespan = 800;
+                this.bullet.reset(this.body.x + 32,  this.body.y + 32);
+                this.bullet.lifespan = 800 + Math.random() * 200 ;
                 this.bullet.rotation = this.rotation;
-                this.game.physics.arcade.velocityFromRotation(this.rotation, 800, this.bullet.body.velocity);
+                this.game.physics.arcade.velocityFromRotation(
+                    this.rotation + (Math.random() * 0.05 - 0.1),
+                    (700 + Math.random() * 100),
+                    this.bullet.body.velocity
+                );
                 this.bulletTime = this.game.time.now + 15;
             }
         }
