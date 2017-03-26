@@ -7,23 +7,22 @@ import { screenWrap } from '../utils';
 export default class extends Phaser.Sprite {
 
     constructor (game, x, y) {
-        super(game, x, y, playerShipBMD(game));
+        super(game, x, y, playerShipBMD(game).bmd);
         this.bulletTime = 0;
         this.anchor.set(0.5);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
+        this.game.physics.p2.enable(this, true);
+        this.body.addPolygon({}, playerShipBMD(game).polygon);
 
-        this.game.physics.enable(this, Phaser.Physics.ARCADE);
-        this.body.drag.set(150);
-        this.body.maxVelocity.set(800);
+        this.body.mass = 5;
+        this.body.collideWorldBounds = false;
 
         this.bullets = game.add.group();
         this.bullets.enableBody = true;
         this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
         this.bullets.createMultiple(80, bulletBMD(game));
-        this.bullets.setAll('anchor.x', 0.5);
-        this.bullets.setAll('anchor.y', 0.5);
     }
 
     update() {
@@ -33,20 +32,14 @@ export default class extends Phaser.Sprite {
         }
 
         if (this.cursors.up.isDown) {
-            this.game.physics.arcade.accelerationFromRotation(
-                this.rotation,
-                500,
-                this.body.acceleration
-            );
-        } else {
-            this.body.acceleration.set(0);
+            this.body.thrustRight(4000)
         }
 
         if (this.cursors.left.isDown) {
-            this.body.angularVelocity = -300;
+            this.body.angularVelocity = -6;
         }
         else if (this.cursors.right.isDown) {
-            this.body.angularVelocity = 300;
+            this.body.angularVelocity = 6;
         }
         else {
             this.body.angularVelocity = 0;
